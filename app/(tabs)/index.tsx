@@ -1,98 +1,258 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
-
-import { HelloWave } from '@/components/hello-wave';
-import ParallaxScrollView from '@/components/parallax-scroll-view';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { Link } from 'expo-router';
+import { StyleSheet, Text, View, SafeAreaView } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
+import { StatusBar } from 'expo-status-bar';
 
 export default function HomeScreen() {
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12',
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <Link href="/modal">
-          <Link.Trigger>
-            <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-          </Link.Trigger>
-          <Link.Preview />
-          <Link.Menu>
-            <Link.MenuAction title="Action" icon="cube" onPress={() => alert('Action pressed')} />
-            <Link.MenuAction
-              title="Share"
-              icon="square.and.arrow.up"
-              onPress={() => alert('Share pressed')}
-            />
-            <Link.Menu title="More" icon="ellipsis">
-              <Link.MenuAction
-                title="Delete"
-                icon="trash"
-                destructive
-                onPress={() => alert('Delete pressed')}
-              />
-            </Link.Menu>
-          </Link.Menu>
-        </Link>
+    <LinearGradient
+      colors={['#1a3a5c', '#4a90c2']}
+      style={styles.container}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 0, y: 1 }}
+    >
+      <StatusBar style="light" />
+      <SafeAreaView style={styles.safeArea}>
+        {/* Top Status Bar Area */}
+        <View style={styles.statusBar}>
+          <Text style={styles.time}>9:41 PM</Text>
+          <View style={styles.statusIcons}>
+            <View style={styles.signalBars}>
+              <View style={[styles.bar, styles.bar1]} />
+              <View style={[styles.bar, styles.bar2]} />
+              <View style={[styles.bar, styles.bar3]} />
+              <View style={[styles.bar, styles.bar4]} />
+            </View>
+            <View style={styles.wifiIcon}>
+              <View style={styles.wifiArc1} />
+              <View style={styles.wifiArc2} />
+              <View style={styles.wifiArc3} />
+            </View>
+            <View style={styles.battery}>
+              <View style={styles.batteryBody}>
+                <View style={[styles.batteryLevel, { width: '55%' }]} />
+              </View>
+              <View style={styles.batteryTip} />
+            </View>
+          </View>
+        </View>
 
-        <ThemedText>
-          {`Tap the Explore tab to learn more about what's included in this starter app.`}
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          {`When you're ready, run `}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+        {/* Centered Content */}
+        <View style={styles.content}>
+          {/* Logo - F in Circle */}
+          <View style={styles.logoContainer}>
+            <View style={styles.logoCircle}>
+              <View style={styles.logoF}>
+                {/* Vertical line of F */}
+                <View style={styles.fVertical} />
+                {/* Top horizontal line */}
+                <View style={styles.fTopHorizontal} />
+                {/* Middle horizontal line */}
+                <View style={styles.fMiddleHorizontal} />
+              </View>
+            </View>
+          </View>
+
+          {/* App Name */}
+          <Text style={styles.appName}>FuelTrans</Text>
+
+          {/* Tagline */}
+          <Text style={styles.tagline}>Reimagine Fuel Retailing</Text>
+        </View>
+
+        {/* Home Indicator */}
+        <View style={styles.homeIndicator} />
+      </SafeAreaView>
+    </LinearGradient>
   );
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
+  container: {
+    flex: 1,
+  },
+  safeArea: {
+    flex: 1,
+  },
+  statusBar: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    paddingTop: 10,
+    paddingBottom: 5,
+  },
+  time: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  statusIcons: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
   },
-  stepContainer: {
-    gap: 8,
+  signalBars: {
+    flexDirection: 'row',
+    alignItems: 'flex-end',
+    gap: 2,
+    height: 12,
+  },
+  bar: {
+    width: 3,
+    backgroundColor: 'white',
+  },
+  bar1: {
+    height: 4,
+  },
+  bar2: {
+    height: 6,
+  },
+  bar3: {
+    height: 8,
+  },
+  bar4: {
+    height: 10,
+  },
+  wifiIcon: {
+    width: 18,
+    height: 14,
+    position: 'relative',
+  },
+  wifiArc1: {
+    position: 'absolute',
+    width: 8,
+    height: 8,
+    borderWidth: 1.5,
+    borderColor: 'white',
+    borderBottomColor: 'transparent',
+    borderLeftColor: 'transparent',
+    borderRightColor: 'transparent',
+    borderRadius: 8,
+    top: 0,
+    right: 0,
+  },
+  wifiArc2: {
+    position: 'absolute',
+    width: 12,
+    height: 12,
+    borderWidth: 1.5,
+    borderColor: 'white',
+    borderBottomColor: 'transparent',
+    borderLeftColor: 'transparent',
+    borderRightColor: 'transparent',
+    borderRadius: 12,
+    top: 2,
+    right: -2,
+  },
+  wifiArc3: {
+    position: 'absolute',
+    width: 16,
+    height: 16,
+    borderWidth: 1.5,
+    borderColor: 'white',
+    borderBottomColor: 'transparent',
+    borderLeftColor: 'transparent',
+    borderRightColor: 'transparent',
+    borderRadius: 16,
+    top: 4,
+    right: -4,
+  },
+  battery: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 2,
+  },
+  batteryBody: {
+    width: 24,
+    height: 12,
+    borderWidth: 1.5,
+    borderColor: 'white',
+    borderRadius: 2,
+    overflow: 'hidden',
+    position: 'relative',
+  },
+  batteryLevel: {
+    position: 'absolute',
+    left: 1,
+    top: 1,
+    bottom: 1,
+    backgroundColor: 'white',
+    borderRadius: 1,
+  },
+  batteryTip: {
+    width: 2,
+    height: 6,
+    backgroundColor: 'white',
+    borderRadius: 0.5,
+  },
+  content: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  logoContainer: {
+    marginBottom: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  logoCircle: {
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    borderWidth: 3,
+    borderColor: 'white',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  logoF: {
+    width: 50,
+    height: 50,
+    position: 'relative',
+  },
+  fVertical: {
+    position: 'absolute',
+    left: 0,
+    top: 0,
+    width: 6,
+    height: 50,
+    backgroundColor: 'white',
+    borderRadius: 3,
+  },
+  fTopHorizontal: {
+    position: 'absolute',
+    left: 0,
+    top: 0,
+    width: 30,
+    height: 6,
+    backgroundColor: 'white',
+    borderRadius: 3,
+  },
+  fMiddleHorizontal: {
+    position: 'absolute',
+    left: 0,
+    top: 20,
+    width: 25,
+    height: 6,
+    backgroundColor: 'white',
+    borderRadius: 3,
+  },
+  appName: {
+    color: 'white',
+    fontSize: 32,
+    fontWeight: 'bold',
     marginBottom: 8,
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+  tagline: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: '300',
+  },
+  homeIndicator: {
+    width: 134,
+    height: 5,
+    backgroundColor: 'rgba(255, 255, 255, 0.3)',
+    borderRadius: 3,
+    alignSelf: 'center',
+    marginBottom: 8,
   },
 });
