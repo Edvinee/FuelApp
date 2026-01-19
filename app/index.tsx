@@ -2,8 +2,10 @@ import { StyleSheet, Text, View, SafeAreaView, Platform, TextInput, TouchableOpa
 import { LinearGradient } from 'expo-linear-gradient';
 import { StatusBar } from 'expo-status-bar';
 import { useState } from 'react';
+import { useRouter } from 'expo-router';
 
 export default function LoginScreen() {
+  const router = useRouter();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
@@ -108,7 +110,10 @@ export default function LoginScreen() {
               </LinearGradient>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.registerButton}>
+            <TouchableOpacity 
+              style={styles.registerButton}
+              onPress={() => router.push('/register')}
+            >
               <Text style={styles.registerButtonText}>New User Registration</Text>
             </TouchableOpacity>
           </View>
