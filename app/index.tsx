@@ -99,7 +99,10 @@ export default function LoginScreen() {
 
           {/* Action Buttons */}
           <View style={styles.buttonSection}>
-            <TouchableOpacity style={styles.loginButton}>
+            <TouchableOpacity 
+              style={styles.loginButton}
+              onPress={() => router.push('/dashboard')}
+            >
               <LinearGradient
                 colors={['#1a3a5c', '#4a90c2']}
                 start={{ x: 0, y: 0 }}
