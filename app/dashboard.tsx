@@ -1,7 +1,10 @@
 import { StyleSheet, Text, View, SafeAreaView, Platform, TouchableOpacity, ScrollView } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
+import { useRouter } from 'expo-router';
 
 export default function DashboardScreen() {
+  const router = useRouter();
+
   return (
     <View style={styles.container}>
       <StatusBar style="dark" />
@@ -52,7 +55,10 @@ export default function DashboardScreen() {
           {/* Action Cards */}
           <View style={styles.cardsSection}>
             {/* Add Vehicle Card */}
-            <TouchableOpacity style={[styles.card, styles.addVehicleCard]}>
+            <TouchableOpacity 
+              style={[styles.card, styles.addVehicleCard]}
+              onPress={() => router.push('/add-vehicle')}
+            >
               <Text style={styles.cardText}>Add Vehicle</Text>
               <View style={styles.cardIcon}>
                 <View style={styles.carIcon}>
