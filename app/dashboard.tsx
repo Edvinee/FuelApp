@@ -71,7 +71,10 @@ export default function DashboardScreen() {
             </TouchableOpacity>
 
             {/* Pre booked Card */}
-            <TouchableOpacity style={[styles.card, styles.preBookedCard]}>
+            <TouchableOpacity
+              style={[styles.card, styles.preBookedCard]}
+              onPress={() => router.push('/prebook-fuel')}
+            >
               <Text style={styles.cardText}>Pre booked</Text>
               <View style={styles.cardIcon}>
                 <View style={styles.handIcon}>

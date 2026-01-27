@@ -1,48 +1,13 @@
-import { StyleSheet, Text, View, SafeAreaView, Platform, TouchableOpacity, ScrollView, TextInput } from 'react-native';
+import { StyleSheet, Text, View, SafeAreaView, Platform, TouchableOpacity, ScrollView, Modal } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { useRouter, useLocalSearchParams } from 'expo-router';
+import { LinearGradient } from 'expo-linear-gradient';
 import { useState } from 'react';
 
-export default function VehicleDetailsScreen() {
+export default function ReviewDetailsScreen() {
   const router = useRouter();
-  const { vehicleType, brand } = useLocalSearchParams();
-  const [registrationNumber, setRegistrationNumber] = useState('');
-  const [selectedFuelType, setSelectedFuelType] = useState('Any Petrol');
-
-  const fuelTypes = [
-    'Power',
-    'Power 99',
-    'Petrol/CNG',
-    'Any Petrol',
-    'Diesel',
-    'Any Diesel',
-    'Unleaded',
-    'Turbojet',
-  ];
-
-  // Generate vehicle model name based on brand (for demo purposes)
-  const getVehicleModel = () => {
-    if (vehicleType === 'Bike') {
-      const bikeModels: { [key: string]: string } = {
-        'Ducati': 'Ducati Streetfighter',
-        'Honda': 'Honda CBR',
-        'Yamaha': 'Yamaha R1',
-        'Suzuki': 'Suzuki GSX-R',
-        'Kawasaki': 'Kawasaki Ninja',
-        'Harley-Davidson': 'Harley-Davidson Sportster',
-        'BMW': 'BMW S1000RR',
-        'Triumph': 'Triumph Speed Triple',
-        'Royal Enfield': 'Royal Enfield Classic',
-        'Bajaj': 'Bajaj Pulsar',
-        'Hero': 'Hero Splendor',
-        'TVS': 'TVS Apache',
-      };
-      return bikeModels[brand as string] || `${brand} Motorcycle`;
-    }
-    return `${brand} ${vehicleType}`;
-  };
-
-  const vehicleModel = getVehicleModel();
+  const { vehicleType, brand, model, registrationNumber, fuelType } = useLocalSearchParams();
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   return (
     <View style={styles.container}>
@@ -91,72 +56,100 @@ export default function VehicleDetailsScreen() {
         showsVerticalScrollIndicator={false}
       >
         {/* Heading */}
-        <Text style={styles.heading}>Enter Vehicle Details</Text>
+        <Text style={styles.heading}>Review Details</Text>
 
-        {/* Vehicle Icon */}
-        <View style={styles.vehicleIconContainer}>
-          <View style={styles.motorcycleIcon}>
-            <View style={styles.bikeFrame} />
-            <View style={styles.bikeWheel1} />
-            <View style={styles.bikeWheel2} />
-            <View style={styles.bikeSeat} />
-            <View style={styles.bikeHandlebar} />
+        {/* Vehicle Details Card */}
+        <View style={styles.detailsCard}>
+          {/* Motorcycle Icon */}
+          <View style={styles.vehicleIconContainer}>
+            <View style={styles.motorcycleIcon}>
+              <View style={styles.bikeFrame} />
+              <View style={styles.bikeWheel1} />
+              <View style={styles.bikeWheel2} />
+              <View style={styles.bikeSeat} />
+              <View style={styles.bikeHandlebar} />
+            </View>
           </View>
-        </View>
 
-        {/* Vehicle Model Name */}
-        <Text style={styles.vehicleModel}>{vehicleModel}</Text>
+          {/* Vehicle Model Name */}
+          <Text style={styles.vehicleModel}>{model || `${brand} ${vehicleType}`}</Text>
 
-        {/* Registration Number Input */}
-        <View style={styles.inputContainer}>
-          <TextInput
-            style={styles.input}
-            placeholder="Registration Number"
-            placeholderTextColor="#999999"
-            value={registrationNumber}
-            onChangeText={setRegistrationNumber}
-          />
-          <View style={styles.inputUnderline} />
-        </View>
+          {/* Registration Number */}
+          <View style={styles.detailRow}>
+            <Text style={styles.detailLabel}>Registration No :</Text>
+            <Text style={styles.detailValue}>{registrationNumber || 'Not provided'}</Text>
+          </View>
 
-        {/* Fuel Type Selection */}
-        <Text style={styles.fuelTypeHeading}>Select Fuel Type</Text>
-        <View style={styles.fuelTypeList}>
-          {fuelTypes.map((fuelType) => (
-            <TouchableOpacity
-              key={fuelType}
-              style={styles.radioButtonContainer}
-              onPress={() => setSelectedFuelType(fuelType)}
-            >
-              <View style={styles.radioButton}>
-                {selectedFuelType === fuelType && <View style={styles.radioButtonSelected} />}
-              </View>
-              <Text style={styles.radioButtonLabel}>{fuelType}</Text>
-            </TouchableOpacity>
-          ))}
+          {/* Fuel Type */}
+          <View style={styles.detailRow}>
+            <Text style={styles.detailLabel}>Fuel Type :</Text>
+            <Text style={styles.detailValue}>{fuelType || 'Any Petrol'}</Text>
+          </View>
         </View>
       </ScrollView>
 
-      {/* Select Button */}
+      {/* Action Buttons */}
       <View style={styles.buttonContainer}>
         <TouchableOpacity 
-          style={styles.selectButton}
+          style={styles.actionButton}
           onPress={() => {
-            router.push({
-              pathname: '/review-details',
-              params: {
-                vehicleType: vehicleType as string,
-                brand: brand as string,
-                model: vehicleModel,
-                registrationNumber: registrationNumber,
-                fuelType: selectedFuelType,
-              }
-            });
+            // Save and add another vehicle - go back to vehicle type selection
+            router.push('/add-vehicle');
           }}
         >
-          <Text style={styles.selectButtonText}>Select</Text>
+          <LinearGradient
+            colors={['#1a3a5c', '#4a90c2']}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 0 }}
+            style={styles.buttonGradient}
+          >
+            <Text style={styles.buttonText}>Save and another vehicle</Text>
+          </LinearGradient>
+        </TouchableOpacity>
+
+        <Text style={styles.orText}>OR</Text>
+
+        <TouchableOpacity 
+          style={styles.actionButton}
+          onPress={() => {
+            // Show success modal
+            setShowSuccessModal(true);
+          }}
+        >
+          <LinearGradient
+            colors={['#1a3a5c', '#4a90c2']}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 0 }}
+            style={styles.buttonGradient}
+          >
+            <Text style={styles.buttonText}>Save and Proceed</Text>
+          </LinearGradient>
         </TouchableOpacity>
       </View>
+
+      {/* Success Modal */}
+      <Modal
+        visible={showSuccessModal}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={() => setShowSuccessModal(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContainer}>
+            <Text style={styles.modalTitle}>Congratulations</Text>
+            <Text style={styles.modalMessage}>You have successfully added your vehicle</Text>
+            <TouchableOpacity
+              style={styles.modalButton}
+              onPress={() => {
+                setShowSuccessModal(false);
+                router.push('/dashboard');
+              }}
+            >
+              <Text style={styles.modalButtonText}>OK</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
 
       {/* Home Indicator */}
       <View style={styles.homeIndicator} />
@@ -167,7 +160,7 @@ export default function VehicleDetailsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#f5f5f5',
   },
   headerBar: {
     backgroundColor: '#1a3a5c',
@@ -366,11 +359,11 @@ const styles = StyleSheet.create({
   scrollContent: {
     flexGrow: 1,
     paddingHorizontal: 24,
-    paddingTop: 24,
-    paddingBottom: 100,
+    paddingTop: 32,
+    paddingBottom: 24,
   },
   heading: {
-    fontSize: 24,
+    fontSize: 28,
     fontWeight: '700',
     color: '#000000',
     marginBottom: 32,
@@ -380,6 +373,18 @@ const styles = StyleSheet.create({
       android: 'Roboto',
       web: 'system-ui, -apple-system, sans-serif',
     }),
+  },
+  detailsCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    padding: 24,
+    alignItems: 'center',
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 4,
+    marginBottom: 24,
   },
   vehicleIconContainer: {
     alignItems: 'center',
@@ -401,7 +406,7 @@ const styles = StyleSheet.create({
     height: 40,
     backgroundColor: 'transparent',
     borderWidth: 4,
-    borderColor: '#1a9a8e',
+    borderColor: '#1a3a5c',
     borderRadius: 20,
   },
   bikeWheel1: {
@@ -413,7 +418,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     backgroundColor: 'transparent',
     borderWidth: 4,
-    borderColor: '#1a9a8e',
+    borderColor: '#1a3a5c',
   },
   bikeWheel2: {
     position: 'absolute',
@@ -424,7 +429,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     backgroundColor: 'transparent',
     borderWidth: 4,
-    borderColor: '#1a9a8e',
+    borderColor: '#1a3a5c',
   },
   bikeSeat: {
     position: 'absolute',
@@ -432,7 +437,7 @@ const styles = StyleSheet.create({
     left: 50,
     width: 30,
     height: 8,
-    backgroundColor: '#1a9a8e',
+    backgroundColor: '#1a3a5c',
     borderRadius: 4,
   },
   bikeHandlebar: {
@@ -441,78 +446,44 @@ const styles = StyleSheet.create({
     left: 60,
     width: 20,
     height: 3,
-    backgroundColor: '#1a9a8e',
+    backgroundColor: '#1a3a5c',
     borderRadius: 1.5,
     transform: [{ rotate: '-20deg' }],
   },
   vehicleModel: {
-    fontSize: 20,
+    fontSize: 22,
     fontWeight: '600',
     color: '#000000',
     textAlign: 'center',
-    marginBottom: 32,
+    marginBottom: 24,
     fontFamily: Platform.select({
       ios: 'SF Pro Display',
       android: 'Roboto',
       web: 'system-ui, -apple-system, sans-serif',
     }),
   },
-  inputContainer: {
-    marginBottom: 32,
+  detailRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 12,
+    width: '100%',
   },
-  input: {
+  detailLabel: {
     fontSize: 16,
-    color: '#000000',
-    paddingVertical: 12,
+    fontWeight: '500',
+    color: '#666666',
+    marginRight: 8,
     fontFamily: Platform.select({
       ios: 'SF Pro Text',
       android: 'Roboto',
       web: 'system-ui, -apple-system, sans-serif',
     }),
   },
-  inputUnderline: {
-    height: 1,
-    backgroundColor: '#CCCCCC',
-    marginTop: 4,
-  },
-  fuelTypeHeading: {
-    fontSize: 18,
+  detailValue: {
+    fontSize: 16,
     fontWeight: '600',
     color: '#000000',
-    marginBottom: 16,
-    fontFamily: Platform.select({
-      ios: 'SF Pro Display',
-      android: 'Roboto',
-      web: 'system-ui, -apple-system, sans-serif',
-    }),
-  },
-  fuelTypeList: {
-    gap: 12,
-  },
-  radioButtonContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: 8,
-  },
-  radioButton: {
-    width: 24,
-    height: 24,
-    borderRadius: 12,
-    borderWidth: 2,
-    borderColor: '#CCCCCC',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginRight: 12,
-  },
-  radioButtonSelected: {
-    width: 12,
-    height: 12,
-    borderRadius: 6,
-    backgroundColor: '#666666',
-  },
-  radioButtonLabel: {
-    fontSize: 16,
-    color: '#000000',
+    flex: 1,
     fontFamily: Platform.select({
       ios: 'SF Pro Text',
       android: 'Roboto',
@@ -523,26 +494,41 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     paddingBottom: Platform.OS === 'ios' ? 20 : 24,
     paddingTop: 16,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#f5f5f5',
   },
-  selectButton: {
-    backgroundColor: '#1a9a8e',
+  actionButton: {
     borderRadius: 12,
-    paddingVertical: 16,
-    alignItems: 'center',
-    justifyContent: 'center',
+    overflow: 'hidden',
+    marginBottom: 12,
     shadowColor: '#000000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 3,
   },
-  selectButtonText: {
+  buttonGradient: {
+    paddingVertical: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  buttonText: {
     color: '#FFFFFF',
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: '700',
     fontFamily: Platform.select({
       ios: 'SF Pro Display',
+      android: 'Roboto',
+      web: 'system-ui, -apple-system, sans-serif',
+    }),
+  },
+  orText: {
+    fontSize: 14,
+    fontWeight: '500',
+    color: '#666666',
+    textAlign: 'center',
+    marginVertical: 8,
+    fontFamily: Platform.select({
+      ios: 'SF Pro Text',
       android: 'Roboto',
       web: 'system-ui, -apple-system, sans-serif',
     }),
@@ -554,5 +540,72 @@ const styles = StyleSheet.create({
     borderRadius: 2.5,
     alignSelf: 'center',
     marginBottom: Platform.OS === 'ios' ? 8 : 12,
+    marginTop: 8,
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 24,
+  },
+  modalContainer: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    padding: 24,
+    width: '100%',
+    maxWidth: 320,
+    alignItems: 'center',
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 8,
+  },
+  modalTitle: {
+    fontSize: 24,
+    fontWeight: '700',
+    color: '#333333',
+    marginBottom: 16,
+    textAlign: 'center',
+    fontFamily: Platform.select({
+      ios: 'SF Pro Display',
+      android: 'Roboto',
+      web: 'system-ui, -apple-system, sans-serif',
+    }),
+  },
+  modalMessage: {
+    fontSize: 16,
+    fontWeight: '400',
+    color: '#666666',
+    textAlign: 'center',
+    marginBottom: 24,
+    lineHeight: 22,
+    fontFamily: Platform.select({
+      ios: 'SF Pro Text',
+      android: 'Roboto',
+      web: 'system-ui, -apple-system, sans-serif',
+    }),
+  },
+  modalButton: {
+    width: '100%',
+    paddingVertical: 14,
+    paddingHorizontal: 32,
+    borderRadius: 8,
+    borderWidth: 1.5,
+    borderColor: '#1a9a8e',
+    backgroundColor: '#FFFFFF',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  modalButtonText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#333333',
+    fontFamily: Platform.select({
+      ios: 'SF Pro Text',
+      android: 'Roboto',
+      web: 'system-ui, -apple-system, sans-serif',
+    }),
   },
 });
