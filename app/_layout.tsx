@@ -64,6 +64,7 @@ export default function RootLayout() {
         <Stack.Screen name="vehicle-details" options={{ headerShown: false }} />
         <Stack.Screen name="review-details" options={{ headerShown: false }} />
         <Stack.Screen name="prebook-fuel" options={{ headerShown: false }} />
+        <Stack.Screen name="prebook-fuel-details" options={{ headerShown: false }} />
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Modal' }} />
       </Stack>

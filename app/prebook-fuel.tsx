@@ -143,7 +143,19 @@ export default function PrebookFuelScreen() {
                 <TouchableOpacity style={[styles.actionBtn, styles.stopBtn]}>
                   <Text style={[styles.actionText, styles.stopText]}>Stop Fuel</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={[styles.actionBtn, styles.prebookBtn]}>
+                <TouchableOpacity
+                  style={[styles.actionBtn, styles.prebookBtn]}
+                  onPress={() =>
+                    router.push({
+                      pathname: '/prebook-fuel-details',
+                      params: {
+                        registration: v.registration,
+                        model: v.model,
+                        mode: 'amount',
+                      },
+                    })
+                  }
+                >
                   <Text style={[styles.actionText, styles.prebookText]}>Prebook Fuel</Text>
                 </TouchableOpacity>
               </View>
