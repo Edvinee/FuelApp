@@ -91,7 +91,10 @@ export default function DashboardScreen() {
             </TouchableOpacity>
 
             {/* Transaction Card */}
-            <TouchableOpacity style={[styles.card, styles.transactionCard]}>
+            <TouchableOpacity
+              style={[styles.card, styles.transactionCard]}
+              onPress={() => router.push('/transaction-history')}
+            >
               <Text style={styles.cardText}>Transaction</Text>
               <View style={styles.cardIcon}>
                 <View style={styles.transactionIcon}>

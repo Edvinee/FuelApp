@@ -2,6 +2,7 @@ import { StatusBar } from 'expo-status-bar';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useMemo, useState } from 'react';
 import {
+  Modal,
   Platform,
   ScrollView,
   StyleSheet,
@@ -27,6 +28,7 @@ export default function PrebookFuelDetailsScreen() {
   const [selectedAmount, setSelectedAmount] = useState<number | null>(200);
   const [selectedQuantity, setSelectedQuantity] = useState<number | null>(100);
   const [saveFavourite, setSaveFavourite] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   const registration = params.registration || 'TN 01 AB 1234';
   const model = params.model || 'Ducati Streetfighter';
@@ -199,10 +201,61 @@ export default function PrebookFuelDetailsScreen() {
 
       {/* Bottom button */}
       <View style={styles.bottomBar}>
-        <TouchableOpacity style={styles.primaryButton}>
+        <TouchableOpacity
+          style={styles.primaryButton}
+          onPress={() => {
+            if (mode === 'quantity') {
+              setShowSuccessModal(true);
+            }
+            // For amount mode, you can add similar logic later if needed
+          }}
+        >
           <Text style={styles.primaryButtonText}>{bottomLabel}</Text>
         </TouchableOpacity>
       </View>
+
+      {/* Success Modal */}
+      <Modal
+        visible={showSuccessModal}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={() => setShowSuccessModal(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContainer}>
+            <Text style={styles.modalTitle}>Congratulations</Text>
+            <Text style={styles.modalMessage}>
+              Quantity {selectedQuantity} L is set successfully for vehicle {registration}
+            </Text>
+            <View style={styles.modalButtons}>
+              <TouchableOpacity
+                style={styles.modalButtonOutlined}
+                onPress={() => {
+                  setShowSuccessModal(false);
+                  router.push({
+                    pathname: '/view-qr',
+                    params: {
+                      registration: registration,
+                      quantity: selectedQuantity?.toString() || '',
+                    },
+                  });
+                }}
+              >
+                <Text style={styles.modalButtonOutlinedText}>View QR</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.modalButtonPrimary}
+                onPress={() => {
+                  setShowSuccessModal(false);
+                  router.push('/prebooked-vehicles');
+                }}
+              >
+                <Text style={styles.modalButtonPrimaryText}>OK</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
 
       <View style={styles.homeIndicator} />
     </View>
@@ -624,6 +677,98 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     marginBottom: Platform.OS === 'ios' ? 8 : 12,
     marginTop: 6,
+  },
+
+  // Modal styles
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 24,
+  },
+  modalContainer: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    padding: 24,
+    width: '100%',
+    maxWidth: 320,
+    alignItems: 'center',
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 8,
+  },
+  modalTitle: {
+    fontSize: 24,
+    fontWeight: '700',
+    color: '#000000',
+    marginBottom: 16,
+    textAlign: 'center',
+    fontFamily: Platform.select({
+      ios: 'SF Pro Display',
+      android: 'Roboto',
+      web: 'system-ui, -apple-system, sans-serif',
+    }),
+  },
+  modalMessage: {
+    fontSize: 16,
+    fontWeight: '400',
+    color: '#000000',
+    textAlign: 'center',
+    marginBottom: 24,
+    lineHeight: 22,
+    fontFamily: Platform.select({
+      ios: 'SF Pro Text',
+      android: 'Roboto',
+      web: 'system-ui, -apple-system, sans-serif',
+    }),
+  },
+  modalButtons: {
+    flexDirection: 'row',
+    width: '100%',
+    gap: 12,
+  },
+  modalButtonOutlined: {
+    flex: 1,
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+    borderWidth: 1.5,
+    borderColor: '#4a90c2',
+    backgroundColor: '#FFFFFF',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  modalButtonOutlinedText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#000000',
+    fontFamily: Platform.select({
+      ios: 'SF Pro Text',
+      android: 'Roboto',
+      web: 'system-ui, -apple-system, sans-serif',
+    }),
+  },
+  modalButtonPrimary: {
+    flex: 1,
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+    backgroundColor: '#000000',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  modalButtonPrimaryText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#FFFFFF',
+    fontFamily: Platform.select({
+      ios: 'SF Pro Text',
+      android: 'Roboto',
+      web: 'system-ui, -apple-system, sans-serif',
+    }),
   },
 });
 
